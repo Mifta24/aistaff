@@ -35,13 +35,13 @@ class Agent extends Model
             'level_max' => $this->level_max,
             'price' => $this->price,
             'featured' => $this->featured,
+            'starters' => $t($this->starters),
         ];
 
         if ($full) {
             $data += [
                 'description' => $t($this->description),
                 'skills' => $t($this->skills),
-                'starters' => $t($this->starters),
             ];
         }
 

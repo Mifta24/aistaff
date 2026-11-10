@@ -1,3 +1,4 @@
+import { ArrowUp, Check, Copy, RotateCcw, Square } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import { useI18n } from '@/lib/i18n';
@@ -81,62 +82,69 @@ export default function Chat({ slug, name, starters }: { slug: string; name: str
 
     return (
         <div className="flex h-[calc(100vh-3.5rem)] min-h-[560px] flex-col bg-surface lg:max-h-[820px]">
-            <div className="flex items-center justify-between border-b border-line px-6 py-3.5 md:px-8">
-                <div className="flex items-center gap-3 font-mono text-xs">
-                    <span className="size-2 bg-signal" />
-                    <span className="text-ink">{name}</span>
-                    <span className="text-dim">/ {t('chat.title').toLowerCase()}</span>
+            <div className="flex items-center justify-between border-b border-line px-5 py-3 md:px-8">
+                <div className="flex items-center gap-3">
+                    <span className="grid size-9 place-items-center rounded-full bg-signal font-display text-lg text-bg0">{name.charAt(0)}</span>
+                    <div className="leading-tight">
+                        <div className="text-sm font-medium text-ink">{name}</div>
+                        <div className="text-xs text-mute">{t('chat.title')}</div>
+                    </div>
                 </div>
                 {msgs.length > 0 && (
-                    <button onClick={() => { abort.current?.abort(); setMsgs([]); setError(false); }} className="font-mono text-xs text-mute transition hover:text-signal">
-                        [{t('chat.reset')}]
+                    <button onClick={() => { abort.current?.abort(); setMsgs([]); setError(false); }} className="flex items-center gap-1.5 rounded-lg border border-mute/40 px-3 py-2 text-sm text-ink transition hover:border-ink">
+                        <RotateCcw className="size-3.5" />{t('chat.reset')}
                     </button>
                 )}
             </div>
 
-            <div ref={box} className="flex-1 overflow-y-auto">
+            <div ref={box} className="flex-1 space-y-4 overflow-y-auto px-5 py-5 md:px-8">
                 {msgs.length === 0 && (
-                    <div className="flex h-full items-end px-6 pb-6 md:px-8">
+                    <div className="flex h-full items-end">
                         <p className="max-w-xs font-display text-3xl leading-tight text-dim">{t('chat.empty')}</p>
                     </div>
                 )}
                 {msgs.map((m, i) => (
-                    <div key={i} className="border-b border-line px-6 py-5 md:px-8">
-                        <div className={`mb-2 font-mono text-xs tracking-wider uppercase ${m.role === 'user' ? 'text-dim' : 'text-signal'}`}>
-                            {m.role === 'user' ? t('chat.you') : name}
-                        </div>
-                        {m.role === 'assistant' ? (
-                            m.content === '' ? (
-                                <span className="inline-block h-4 w-2 animate-pulse bg-signal" />
+                    <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
+                        <div className={m.role === 'user' ? 'max-w-[85%] rounded-2xl rounded-br-md bg-signal px-4 py-2.5 text-[0.9375rem] leading-relaxed whitespace-pre-wrap text-bg0' : 'max-w-[92%]'}>
+                            {m.role === 'user' ? (
+                                m.content
                             ) : (
-                                <div className="chat-md"><Markdown>{m.content}</Markdown></div>
-                            )
-                        ) : (
-                            <p className="text-[0.9375rem] leading-relaxed whitespace-pre-wrap text-ink">{m.content}</p>
-                        )}
-                        {m.role === 'assistant' && m.content && !busy && (
-                            <button onClick={() => copy(i)} className="mt-3 py-1 font-mono text-xs text-dim transition hover:text-signal">
-                                [{copied === i ? t('chat.copied') : t('chat.copy')}]
-                            </button>
-                        )}
+                                <div className="rounded-2xl rounded-bl-md border border-line bg-bg0 px-4 py-3">
+                                    {m.content === '' ? (
+                                        <span className="inline-flex items-center gap-1 py-1" aria-label="...">
+                                            <span className="size-1.5 animate-pulse rounded-full bg-mute" />
+                                            <span className="size-1.5 animate-pulse rounded-full bg-mute [animation-delay:150ms]" />
+                                            <span className="size-1.5 animate-pulse rounded-full bg-mute [animation-delay:300ms]" />
+                                        </span>
+                                    ) : (
+                                        <div className="chat-md"><Markdown>{m.content}</Markdown></div>
+                                    )}
+                                    {m.content && !busy && (
+                                        <button onClick={() => copy(i)} className="mt-2 flex items-center gap-1.5 rounded-md py-1 text-sm text-mute transition hover:text-ink">
+                                            {copied === i ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+                                            {copied === i ? t('chat.copied') : t('chat.copy')}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 ))}
-                {error && <div className="border-b border-line px-6 py-4 font-mono text-xs text-[#ff7a59] md:px-8">{t('chat.error')}</div>}
+                {error && <div className="rounded-lg border border-[#ff7a59]/50 px-4 py-3 text-sm text-[#ff9b80]">{t('chat.error')}</div>}
             </div>
 
             {msgs.length === 0 && (
-                <div className="border-t border-line">
+                <div className="flex flex-col gap-2 px-5 pb-3 md:px-8">
                     {starters.map((s) => (
-                        <button key={s} onClick={() => send(s)} className="block w-full border-b border-line px-6 py-3.5 text-left text-sm text-mute transition last:border-b-0 hover:bg-bg0 hover:text-ink md:px-8">
-                            <span className="mr-3 font-mono text-signal">↳</span>{s}
+                        <button key={s} onClick={() => send(s)} className="rounded-xl border border-line bg-bg0 px-4 py-3 text-left text-sm text-ink transition hover:border-signal">
+                            {s}
                         </button>
                     ))}
                 </div>
             )}
 
             <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="border-t border-line">
-                <div className="m-4 flex items-end gap-3 border border-mute/40 bg-bg0 px-4 py-2 focus-within:border-signal md:mx-8">
-                    <span className="pb-1.5 font-mono text-sm text-signal">&gt;</span>
+                <div className="m-4 flex items-end gap-2 rounded-2xl border border-mute/40 bg-bg0 py-2 pr-2 pl-4 focus-within:border-signal md:mx-8">
                     <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -145,15 +153,15 @@ export default function Chat({ slug, name, starters }: { slug: string; name: str
                         maxLength={4000}
                         aria-label={t('chat.placeholder')}
                         placeholder={t('chat.placeholder')}
-                        className="max-h-32 min-h-9 flex-1 resize-none bg-transparent py-1.5 text-sm text-ink outline-none placeholder:text-dim"
+                        className="max-h-32 min-h-9 flex-1 resize-none bg-transparent py-1.5 text-[0.9375rem] text-ink outline-none placeholder:text-dim"
                     />
                     {busy ? (
-                        <button type="button" onClick={() => abort.current?.abort()} className="mb-0.5 border border-mute/60 px-3 py-1.5 font-mono text-xs text-ink transition hover:border-ink">[{t('chat.stop')}]</button>
+                        <button type="button" onClick={() => abort.current?.abort()} aria-label={t('chat.stop')} className="grid size-9 place-items-center rounded-full border border-mute/60 text-ink transition hover:border-ink"><Square className="size-3.5 fill-current" /></button>
                     ) : (
-                        <button type="submit" disabled={!input.trim()} className="mb-0.5 bg-signal px-3 py-1.5 font-mono text-xs font-medium text-bg0 transition hover:bg-ink disabled:bg-line disabled:text-dim">[{t('chat.send')}]</button>
+                        <button type="submit" disabled={!input.trim()} aria-label={t('chat.send')} className="grid size-9 place-items-center rounded-full bg-signal text-bg0 transition hover:bg-ink disabled:bg-line disabled:text-dim"><ArrowUp className="size-4" /></button>
                     )}
                 </div>
-                <p className="border-t border-line px-6 py-2 font-mono text-[11px] text-dim md:px-8">{t('chat.disclaimer')}</p>
+                <p className="px-6 pb-3 text-xs text-dim md:px-8">{t('chat.disclaimer')}</p>
             </form>
         </div>
     );

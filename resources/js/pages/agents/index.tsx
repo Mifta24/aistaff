@@ -23,7 +23,7 @@ export default function Index({ agents, categories }: { agents: AgentLite[]; cat
             </section>
 
             <div className="flex flex-col gap-4 border-b border-line px-6 py-4 md:flex-row md:items-center md:justify-between md:px-10">
-                <div className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs">
+                <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
                     {['all', ...categories].map((c) => (
                         <button key={c} onClick={() => setCat(c)} className={`border-b pb-0.5 transition ${cat === c ? 'border-signal text-signal' : 'border-transparent text-mute hover:text-ink'}`}>
                             {c === 'all' ? t('agents.all') : t(`cat.${c}` as Key)}
@@ -35,12 +35,12 @@ export default function Index({ agents, categories }: { agents: AgentLite[]; cat
                     onChange={(e) => setQ(e.target.value)}
                     placeholder={t('agents.search')}
                     aria-label={t('agents.search')}
-                    className="border-b border-line bg-transparent py-1.5 font-mono text-xs text-ink outline-none placeholder:text-dim focus:border-signal md:w-64"
+                    className="rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink outline-none placeholder:text-dim focus:border-signal md:w-72"
                 />
             </div>
 
             {list.map((a, i) => <AgentRow key={a.slug} agent={a} index={i} />)}
-            {list.length === 0 && <p className="px-6 py-20 font-mono text-sm text-dim md:px-10">{t('agents.empty')}</p>}
+            {list.length === 0 && <p className="px-6 py-20 text-dim md:px-10">{t('agents.empty')}</p>}
         </SiteLayout>
     );
 }

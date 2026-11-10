@@ -12,8 +12,8 @@ class AgentSeeder extends Seeder
         $agents = [
             [
                 'slug' => 'sales-assistant', 'category' => 'sales', 'icon' => 'trending-up', 'color' => 'emerald',
-                'name' => ['id' => 'Asisten Penjualan', 'en' => 'Sales Assistant'],
-                'tagline' => ['id' => 'Proposal, penawaran & follow-up klien', 'en' => 'Proposals, quotes & client follow-ups'],
+                'name' => ['id' => 'Penjualan', 'en' => 'Sales'],
+                'tagline' => ['id' => 'Buat proposal, email penawaran, dan follow-up klien', 'en' => 'Write proposals, quotes and client follow-ups'],
                 'description' => [
                     'id' => 'Menyusun proposal, email penawaran, dan skrip follow-up yang meyakinkan. Cocok untuk tim sales kecil yang butuh bergerak cepat.',
                     'en' => 'Drafts persuasive proposals, quotation emails and follow-up scripts. Built for small sales teams that need to move fast.',
@@ -31,8 +31,8 @@ class AgentSeeder extends Seeder
             ],
             [
                 'slug' => 'accounting-assistant', 'category' => 'finance', 'icon' => 'calculator', 'color' => 'amber',
-                'name' => ['id' => 'Asisten Akuntansi', 'en' => 'Accounting Assistant'],
-                'tagline' => ['id' => 'Cek invoice, pengeluaran & rekap bulanan', 'en' => 'Invoice checks, expenses & monthly summaries'],
+                'name' => ['id' => 'Akuntansi', 'en' => 'Accounting'],
+                'tagline' => ['id' => 'Cek invoice dan rapikan pengeluaran bulanan', 'en' => 'Check invoices and tidy up monthly expenses'],
                 'description' => [
                     'id' => 'Membantu memeriksa invoice, mengkategorikan pengeluaran, dan menyusun rekap keuangan sederhana. Bukan pengganti akuntan berlisensi.',
                     'en' => 'Helps review invoices, categorise expenses and prepare simple financial summaries. Not a replacement for a licensed accountant.',
@@ -50,8 +50,8 @@ class AgentSeeder extends Seeder
             ],
             [
                 'slug' => 'social-media-assistant', 'category' => 'marketing', 'icon' => 'megaphone', 'color' => 'pink',
-                'name' => ['id' => 'Asisten Media Sosial', 'en' => 'Social Media Assistant'],
-                'tagline' => ['id' => 'Kalender konten, caption & ide kampanye', 'en' => 'Content calendars, captions & campaign ideas'],
+                'name' => ['id' => 'Konten Media Sosial', 'en' => 'Social Content'],
+                'tagline' => ['id' => 'Buat caption dan jadwal konten Instagram atau TikTok', 'en' => 'Write captions and plan Instagram or TikTok posts'],
                 'description' => [
                     'id' => 'Merencanakan konten mingguan, menulis caption sesuai tone brand, dan menyarankan hashtag serta ide konten.',
                     'en' => 'Plans weekly content, writes captions in your brand voice and suggests hashtags and content ideas.',
@@ -69,8 +69,8 @@ class AgentSeeder extends Seeder
             ],
             [
                 'slug' => 'translation-assistant', 'category' => 'language', 'icon' => 'languages', 'color' => 'sky',
-                'name' => ['id' => 'Asisten Penerjemah', 'en' => 'Translation Assistant'],
-                'tagline' => ['id' => 'Indonesia, Inggris & Jepang dengan konteks bisnis', 'en' => 'Indonesian, English & Japanese with business context'],
+                'name' => ['id' => 'Penerjemah', 'en' => 'Translator'],
+                'tagline' => ['id' => 'Terjemahkan Indonesia, Inggris, Jepang dengan nada bisnis', 'en' => 'Translate Indonesian, English, Japanese in a business tone'],
                 'description' => [
                     'id' => 'Menerjemahkan dan menyunting dokumen bisnis dengan nada yang tepat, serta menjelaskan pilihan kata bila diminta.',
                     'en' => 'Translates and edits business documents in the right tone, and explains word choices on request.',
@@ -88,8 +88,8 @@ class AgentSeeder extends Seeder
             ],
             [
                 'slug' => 'office-assistant', 'category' => 'operations', 'icon' => 'file-text', 'color' => 'violet',
-                'name' => ['id' => 'Asisten Kantor', 'en' => 'Office Assistant'],
-                'tagline' => ['id' => 'Dokumen, notulen & rapikan data', 'en' => 'Documents, meeting notes & data cleanup'],
+                'name' => ['id' => 'Admin Kantor', 'en' => 'Office Admin'],
+                'tagline' => ['id' => 'Buat surat, notulen rapat, dan rapikan data', 'en' => 'Write letters, meeting minutes and clean up data'],
                 'description' => [
                     'id' => 'Membuat surat, notulen rapat, SOP ringkas, dan merapikan data mentah menjadi tabel yang siap pakai.',
                     'en' => 'Creates letters, meeting minutes, concise SOPs and turns messy data into clean tables.',
@@ -107,8 +107,8 @@ class AgentSeeder extends Seeder
             ],
             [
                 'slug' => 'customer-support-ai', 'category' => 'support', 'icon' => 'headset', 'color' => 'rose',
-                'name' => ['id' => 'AI Layanan Pelanggan', 'en' => 'Customer Support AI'],
-                'tagline' => ['id' => 'Draft balasan keluhan & pertanyaan pelanggan', 'en' => 'Draft replies to customer inquiries & complaints'],
+                'name' => ['id' => 'Layanan Pelanggan', 'en' => 'Customer Support'],
+                'tagline' => ['id' => 'Tulis balasan untuk keluhan dan pertanyaan pelanggan', 'en' => 'Write replies to customer complaints and questions'],
                 'description' => [
                     'id' => 'Menyusun balasan yang empatik dan konsisten untuk pertanyaan, komplain, dan permintaan refund.',
                     'en' => 'Writes empathetic, consistent replies to questions, complaints and refund requests.',
@@ -126,8 +126,8 @@ class AgentSeeder extends Seeder
             ],
             [
                 'slug' => 'hotel-concierge', 'category' => 'hospitality', 'icon' => 'concierge-bell', 'color' => 'orange',
-                'name' => ['id' => 'Concierge Hotel & Restoran', 'en' => 'Hotel & Restaurant Concierge'],
-                'tagline' => ['id' => 'Balas tamu, reservasi & rekomendasi menu', 'en' => 'Guest replies, bookings & menu recommendations'],
+                'name' => ['id' => 'Resepsionis Hotel & Resto', 'en' => 'Hotel & Restaurant Front Desk'],
+                'tagline' => ['id' => 'Balas tamu, konfirmasi reservasi, dan rekomendasi menu', 'en' => 'Reply to guests, confirm bookings, recommend menu items'],
                 'description' => [
                     'id' => 'Menjawab pertanyaan tamu 24/7, menyusun konfirmasi reservasi, dan merekomendasikan menu atau fasilitas dengan ramah.',
                     'en' => 'Answers guest questions 24/7, drafts booking confirmations and recommends menus or facilities warmly.',
@@ -145,8 +145,8 @@ class AgentSeeder extends Seeder
             ],
             [
                 'slug' => 'legal-drafter', 'category' => 'legal', 'icon' => 'scale', 'color' => 'slate',
-                'name' => ['id' => 'Asisten Dokumen Hukum', 'en' => 'Legal Document Assistant'],
-                'tagline' => ['id' => 'Ringkas kontrak & draft perjanjian dasar', 'en' => 'Contract summaries & basic agreement drafts'],
+                'name' => ['id' => 'Dokumen Hukum', 'en' => 'Legal Documents'],
+                'tagline' => ['id' => 'Ringkas kontrak dan tandai pasal yang berisiko', 'en' => 'Summarise contracts and flag risky clauses'],
                 'description' => [
                     'id' => 'Meringkas kontrak, menandai klausul berisiko, dan membuat draft perjanjian sederhana. Bukan nasihat hukum.',
                     'en' => 'Summarises contracts, flags risky clauses and drafts simple agreements. Not legal advice.',
