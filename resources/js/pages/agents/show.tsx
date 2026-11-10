@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { AgentRow, type AgentLite } from '@/components/site/agent-row';
+import { AgentIcon } from '@/components/site/agent-icon';
 import Chat from '@/components/site/chat';
 import SiteLayout from '@/components/site/layout';
 import { useI18n, type Key } from '@/lib/i18n';
@@ -26,6 +27,7 @@ export default function Show({ agent, related }: { agent: Agent; related: AgentL
             <div className="grid lg:grid-cols-[1fr_1.05fr]">
                 <div className="border-b border-line lg:border-r lg:border-b-0">
                     <div className="border-b border-line px-6 pt-12 pb-10 md:px-10 md:pt-16">
+                        <div className="mb-6"><AgentIcon icon={agent.icon} size="lg" /></div>
                         <h1 className="font-display text-5xl leading-[1.02] tracking-tight [text-wrap:balance] md:text-7xl">{agent.name}</h1>
                         <p className="mt-5 text-lg text-mute">{agent.tagline}</p>
                     </div>
@@ -58,7 +60,7 @@ export default function Show({ agent, related }: { agent: Agent; related: AgentL
                 </div>
 
                 <div className="lg:sticky lg:top-14 lg:self-start">
-                    <Chat key={agent.slug} slug={agent.slug} name={agent.name} starters={agent.starters} />
+                    <Chat key={agent.slug} slug={agent.slug} name={agent.name} icon={agent.icon} starters={agent.starters} />
                 </div>
             </div>
 

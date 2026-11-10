@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
+import { AgentIcon } from '@/components/site/agent-icon';
 import { type AgentLite } from '@/components/site/agent-row';
 import SiteLayout from '@/components/site/layout';
 import { useI18n, type Key } from '@/lib/i18n';
@@ -48,7 +49,8 @@ export default function Home({ agents }: { agents: AgentLite[] }) {
                     {popular.map((a) => (
                         <Link key={a.slug} href={url(`/agents/${a.slug}`)} className="group flex flex-col justify-between gap-10 border-b border-line px-6 py-8 transition-colors last:border-b-0 hover:bg-surface md:border-b-0 md:px-10 md:py-10">
                             <div>
-                                <h3 className="font-display text-4xl leading-tight">{a.name}</h3>
+                                <AgentIcon icon={a.icon} size="lg" />
+                                <h3 className="mt-6 font-display text-4xl leading-tight">{a.name}</h3>
                                 <p className="mt-3 leading-relaxed text-mute">{a.tagline}</p>
                             </div>
                             <span className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-ink/60 px-5 py-2.5 text-base text-ink transition group-hover:border-signal group-hover:bg-signal group-hover:text-bg0">{t('roster.try')} <ArrowRight className="size-4" /></span>

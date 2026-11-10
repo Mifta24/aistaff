@@ -1,6 +1,7 @@
 import { ArrowUp, Check, Copy, RotateCcw, Square } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
+import { AgentIcon } from '@/components/site/agent-icon';
 import { useI18n } from '@/lib/i18n';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
@@ -9,7 +10,7 @@ function csrf() {
     return decodeURIComponent(document.cookie.split('; ').find((c) => c.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '');
 }
 
-export default function Chat({ slug, name, starters }: { slug: string; name: string; starters: string[] }) {
+export default function Chat({ slug, name, icon, starters }: { slug: string; name: string; icon: string; starters: string[] }) {
     const { t, url } = useI18n();
     const [msgs, setMsgs] = useState<Msg[]>([]);
     const [input, setInput] = useState('');
@@ -84,7 +85,7 @@ export default function Chat({ slug, name, starters }: { slug: string; name: str
         <div className="flex h-[calc(100vh-3.5rem)] min-h-[560px] flex-col bg-surface lg:max-h-[820px]">
             <div className="flex items-center justify-between border-b border-line px-5 py-3 md:px-8">
                 <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-full bg-signal font-display text-lg text-bg0">{name.charAt(0)}</span>
+                    <AgentIcon icon={icon} size="sm" />
                     <div className="leading-tight">
                         <div className="text-sm font-medium text-ink">{name}</div>
                         <div className="text-xs text-mute">{t('chat.title')}</div>
