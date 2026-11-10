@@ -20,9 +20,7 @@ class SiteController extends Controller
         $agents = Agent::where('active', true)->orderBy('sort')->get();
 
         return Inertia::render('home', [
-            'featured' => $agents->where('featured', true)->values()->map->toLocale($locale),
-            'categories' => $agents->pluck('category')->unique()->values(),
-            'agentCount' => $agents->count(),
+            'agents' => $agents->map->toLocale($locale)->values(),
         ]);
     }
 

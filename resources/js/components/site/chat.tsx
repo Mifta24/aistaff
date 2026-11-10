@@ -1,8 +1,6 @@
-import { Check, Copy, RotateCcw, SendHorizonal, Square } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import { useI18n } from '@/lib/i18n';
-import { AgentIcon } from './agent-icon';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
@@ -10,7 +8,7 @@ function csrf() {
     return decodeURIComponent(document.cookie.split('; ').find((c) => c.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '');
 }
 
-export default function Chat({ slug, name, icon, color, starters }: { slug: string; name: string; icon: string; color: string; starters: string[] }) {
+export default function Chat({ slug, name, starters }: { slug: string; name: string; starters: string[] }) {
     const { t, url } = useI18n();
     const [msgs, setMsgs] = useState<Msg[]>([]);
     const [input, setInput] = useState('');
@@ -82,88 +80,80 @@ export default function Chat({ slug, name, icon, color, starters }: { slug: stri
     }
 
     return (
-        <div className="flex h-[640px] flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl shadow-black/50 backdrop-blur-xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
-                <div className="flex items-center gap-3">
-                    <AgentIcon icon={icon} color={color} size="sm" />
-                    <div>
-                        <div className="text-sm font-semibold">{name}</div>
-                        <div className="flex items-center gap-1.5 text-[11px] text-emerald-300">
-                            <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" /> online
-                        </div>
-                    </div>
+        <div className="flex h-[calc(100vh-3.5rem)] min-h-[560px] flex-col bg-surface lg:max-h-[820px]">
+            <div className="flex items-center justify-between border-b border-line px-6 py-3.5 md:px-8">
+                <div className="flex items-center gap-3 font-mono text-xs">
+                    <span className="size-2 bg-signal" />
+                    <span className="text-ink">{name}</span>
+                    <span className="text-dim">/ {t('chat.title').toLowerCase()}</span>
                 </div>
                 {msgs.length > 0 && (
-                    <button onClick={() => { abort.current?.abort(); setMsgs([]); setError(false); }} className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-white/60 transition hover:bg-white/10 hover:text-white">
-                        <RotateCcw className="size-3.5" /> {t('chat.reset')}
+                    <button onClick={() => { abort.current?.abort(); setMsgs([]); setError(false); }} className="font-mono text-xs text-mute transition hover:text-signal">
+                        [{t('chat.reset')}]
                     </button>
                 )}
             </div>
 
-            <div ref={box} className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
+            <div ref={box} className="flex-1 overflow-y-auto">
                 {msgs.length === 0 && (
-                    <div className="flex h-full flex-col items-center justify-center text-center">
-                        <AgentIcon icon={icon} color={color} size="lg" />
-                        <p className="mt-5 max-w-xs text-sm text-white/50">{t('chat.empty')}</p>
+                    <div className="flex h-full items-end px-6 pb-6 md:px-8">
+                        <p className="max-w-xs font-display text-3xl leading-tight text-dim">{t('chat.empty')}</p>
                     </div>
                 )}
                 {msgs.map((m, i) => (
-                    <div key={i} className={`group flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`relative max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${m.role === 'user' ? 'bg-gradient-to-br from-violet-500 to-indigo-600 text-white' : 'border border-white/10 bg-white/[0.06] text-white/90'}`}>
-                            {m.role === 'assistant' ? (
-                                m.content === '' ? (
-                                    <span className="flex gap-1 py-1">
-                                        {[0, 150, 300].map((d) => <span key={d} className="size-1.5 animate-bounce rounded-full bg-white/50" style={{ animationDelay: `${d}ms` }} />)}
-                                    </span>
-                                ) : (
-                                    <div className="chat-md"><Markdown>{m.content}</Markdown></div>
-                                )
-                            ) : (
-                                <p className="whitespace-pre-wrap">{m.content}</p>
-                            )}
-                            {m.role === 'assistant' && m.content && !busy && (
-                                <button onClick={() => copy(i)} className="mt-2 flex items-center gap-1 text-[11px] text-white/55 transition hover:text-white">
-                                    {copied === i ? <Check className="size-3" /> : <Copy className="size-3" />} {copied === i ? t('chat.copied') : t('chat.copy')}
-                                </button>
-                            )}
+                    <div key={i} className="border-b border-line px-6 py-5 md:px-8">
+                        <div className={`mb-2 font-mono text-xs tracking-wider uppercase ${m.role === 'user' ? 'text-dim' : 'text-signal'}`}>
+                            {m.role === 'user' ? t('chat.you') : name}
                         </div>
+                        {m.role === 'assistant' ? (
+                            m.content === '' ? (
+                                <span className="inline-block h-4 w-2 animate-pulse bg-signal" />
+                            ) : (
+                                <div className="chat-md"><Markdown>{m.content}</Markdown></div>
+                            )
+                        ) : (
+                            <p className="text-[0.9375rem] leading-relaxed whitespace-pre-wrap text-ink">{m.content}</p>
+                        )}
+                        {m.role === 'assistant' && m.content && !busy && (
+                            <button onClick={() => copy(i)} className="mt-3 py-1 font-mono text-xs text-dim transition hover:text-signal">
+                                [{copied === i ? t('chat.copied') : t('chat.copy')}]
+                            </button>
+                        )}
                     </div>
                 ))}
-                {error && <div className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-xs text-red-200">{t('chat.error')}</div>}
+                {error && <div className="border-b border-line px-6 py-4 font-mono text-xs text-[#ff7a59] md:px-8">{t('chat.error')}</div>}
             </div>
 
             {msgs.length === 0 && (
-                <div className="flex flex-wrap gap-2 px-5 pb-3">
+                <div className="border-t border-line">
                     {starters.map((s) => (
-                        <button key={s} onClick={() => send(s)} className="rounded-full border border-white/15 bg-white/5 px-3.5 py-2 text-left text-xs text-white/70 transition hover:border-violet-400/60 hover:bg-violet-500/10 hover:text-white">
-                            {s}
+                        <button key={s} onClick={() => send(s)} className="block w-full border-b border-line px-6 py-3.5 text-left text-sm text-mute transition last:border-b-0 hover:bg-bg0 hover:text-ink md:px-8">
+                            <span className="mr-3 font-mono text-signal">↳</span>{s}
                         </button>
                     ))}
                 </div>
             )}
 
-            <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="border-t border-white/10 p-3">
-                <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-2 focus-within:border-violet-400/60">
+            <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="border-t border-line">
+                <div className="m-4 flex items-end gap-3 border border-mute/40 bg-bg0 px-4 py-2 focus-within:border-signal md:mx-8">
+                    <span className="pb-1.5 font-mono text-sm text-signal">&gt;</span>
                     <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input); } }}
                         rows={1}
                         maxLength={4000}
+                        aria-label={t('chat.placeholder')}
                         placeholder={t('chat.placeholder')}
-                        className="max-h-32 min-h-9 flex-1 resize-none bg-transparent px-2 py-1.5 text-sm text-white outline-none placeholder:text-white/45"
+                        className="max-h-32 min-h-9 flex-1 resize-none bg-transparent py-1.5 text-sm text-ink outline-none placeholder:text-dim"
                     />
                     {busy ? (
-                        <button type="button" onClick={() => abort.current?.abort()} className="grid size-9 place-items-center rounded-xl bg-white/15 text-white transition hover:bg-white/25" aria-label={t('chat.stop')}>
-                            <Square className="size-4 fill-current" />
-                        </button>
+                        <button type="button" onClick={() => abort.current?.abort()} className="mb-0.5 border border-mute/60 px-3 py-1.5 font-mono text-xs text-ink transition hover:border-ink">[{t('chat.stop')}]</button>
                     ) : (
-                        <button type="submit" disabled={!input.trim()} className="grid size-9 place-items-center rounded-xl bg-white text-black transition hover:bg-violet-200 disabled:opacity-30" aria-label={t('chat.send')}>
-                            <SendHorizonal className="size-4" />
-                        </button>
+                        <button type="submit" disabled={!input.trim()} className="mb-0.5 bg-signal px-3 py-1.5 font-mono text-xs font-medium text-bg0 transition hover:bg-ink disabled:bg-line disabled:text-dim">[{t('chat.send')}]</button>
                     )}
                 </div>
-                <p className="mt-2 text-center text-[10px] text-white/45">{t('chat.disclaimer')}</p>
+                <p className="border-t border-line px-6 py-2 font-mono text-[11px] text-dim md:px-8">{t('chat.disclaimer')}</p>
             </form>
         </div>
     );

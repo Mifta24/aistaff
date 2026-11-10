@@ -1,5 +1,4 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Globe, Menu, Sparkles, X } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { useI18n } from '@/lib/i18n';
 
@@ -9,60 +8,55 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
     const other = locale === 'id' ? 'en' : 'id';
     const switchUrl = current.replace(/^\/(id|en)/, `/${other}`);
-
-    const links = [
+    const nav = [
         { href: url('/agents'), label: t('nav.agents') },
         { href: url('/#how'), label: t('nav.how') },
     ];
 
     return (
-        <div className="min-h-screen bg-[#07070f] font-sans text-white selection:bg-violet-500/40">
-            <div className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
-                <div className="absolute -top-40 left-1/2 size-[48rem] -translate-x-1/2 rounded-full bg-violet-600/20 blur-[140px]" />
-                <div className="absolute top-1/3 -right-40 size-[32rem] rounded-full bg-cyan-500/10 blur-[120px]" />
-                <div className="absolute bottom-0 -left-40 size-[32rem] rounded-full bg-fuchsia-600/10 blur-[120px]" />
-                <div className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:56px_56px]" />
-            </div>
-
-            <header className="sticky top-0 z-40 border-b border-white/10 bg-[#07070f]/70 backdrop-blur-xl">
-                <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-                    <Link href={url()} className="flex items-center gap-2.5 font-semibold tracking-tight">
-                        <span className="grid size-8 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 shadow-lg shadow-violet-500/30">
-                            <Sparkles className="size-4 text-white" />
-                        </span>
-                        {appName}
+        <div className="site min-h-screen bg-bg0 font-sans text-ink">
+            <header className="sticky top-0 z-40 border-b border-line bg-bg0/95 backdrop-blur-sm">
+                <div className="mx-auto grid h-14 max-w-6xl grid-cols-[1fr_auto] items-center border-x border-line px-6 md:grid-cols-[1fr_auto_1fr] md:px-10">
+                    <Link href={url()} className="flex items-center gap-2.5 font-mono text-sm font-medium tracking-tight">
+                        <span className="size-2.5 bg-signal" />
+                        {appName.toLowerCase().replace(/\s+/g, '-')}
                     </Link>
-                    <nav className="hidden items-center gap-8 text-sm text-white/70 md:flex">
-                        {links.map((l) => (
-                            <Link key={l.href} href={l.href} className="transition hover:text-white">{l.label}</Link>
+
+                    <nav className="hidden items-center gap-7 font-mono text-xs text-mute md:flex">
+                        {nav.map((l, i) => (
+                            <Link key={l.href} href={l.href} className="transition hover:text-ink">
+                                <span className="text-dim">[{i + 1}]</span> {l.label}
+                            </Link>
                         ))}
                     </nav>
-                    <div className="hidden items-center gap-3 md:flex">
-                        <a href={switchUrl} className="flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:border-white/40 hover:text-white">
-                            <Globe className="size-3.5" /> {other.toUpperCase()}
+
+                    <div className="hidden items-center justify-end gap-5 font-mono text-xs md:flex">
+                        <a href={switchUrl} className="text-mute transition hover:text-ink" aria-label="language">
+                            <span className={locale === 'id' ? 'text-ink' : ''}>ID</span> / <span className={locale === 'en' ? 'text-ink' : ''}>EN</span>
                         </a>
-                        <Link href={props.auth.user ? '/dashboard' : '/login'} className="text-sm text-white/70 transition hover:text-white">{t('nav.login')}</Link>
-                        <Link href={url('/agents')} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-violet-200">{t('nav.try')}</Link>
+                        <Link href={props.auth.user ? '/dashboard' : '/login'} className="text-mute transition hover:text-ink">{t('nav.login')}</Link>
+                        <Link href={url('/agents')} className="bg-signal px-3.5 py-2 font-medium text-bg0 transition hover:bg-ink">{t('nav.try')}</Link>
                     </div>
-                    <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="menu">
-                        {open ? <X /> : <Menu />}
+
+                    <button className="-mr-3 px-3 py-3 font-mono text-xs text-mute md:hidden" onClick={() => setOpen(!open)} aria-expanded={open}>
+                        {open ? '[ x ]' : '[ menu ]'}
                     </button>
                 </div>
                 {open && (
-                    <div className="space-y-1 border-t border-white/10 px-5 py-4 md:hidden">
-                        {links.map((l) => (
-                            <Link key={l.href} href={l.href} className="block py-2 text-white/80" onClick={() => setOpen(false)}>{l.label}</Link>
+                    <div className="border-t border-line px-6 py-4 font-mono text-sm md:hidden">
+                        {nav.map((l, i) => (
+                            <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="block py-2.5 text-mute"><span className="text-dim">[{i + 1}]</span> {l.label}</Link>
                         ))}
-                        <a href={switchUrl} className="block py-2 text-white/80">🌐 {other === 'en' ? 'English' : 'Bahasa Indonesia'}</a>
-                        <Link href={url('/agents')} className="mt-2 block rounded-full bg-white py-2.5 text-center font-semibold text-black">{t('nav.try')}</Link>
+                        <a href={switchUrl} className="block py-2.5 text-mute">{other === 'en' ? 'English' : 'Bahasa Indonesia'}</a>
+                        <Link href={url('/agents')} className="mt-3 block bg-signal py-3 text-center font-medium text-bg0">{t('nav.try')}</Link>
                     </div>
                 )}
             </header>
 
-            <main className="relative z-10">{children}</main>
+            <main className="mx-auto max-w-6xl border-x border-line">{children}</main>
 
-            <footer className="relative z-10 border-t border-white/10">
-                <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-white/55 md:flex-row">
+            <footer className="border-t border-line">
+                <div className="mx-auto flex max-w-6xl flex-col justify-between gap-2 border-x border-line px-6 py-8 font-mono text-xs text-dim md:flex-row md:px-10">
                     <span>© {new Date().getFullYear()} {appName}</span>
                     <span>{t('footer.note')}</span>
                 </div>
