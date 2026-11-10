@@ -83,16 +83,16 @@ export default function Chat({ slug, name, icon, starters }: { slug: string; nam
 
     return (
         <div className="flex h-[calc(100vh-12rem)] min-h-[540px] flex-col lg:max-h-[700px]">
-            <div className="flex items-center justify-between border-b border-line px-5 py-3 md:px-6">
+            <div className="flex items-center justify-between border-b-2 border-line bg-surface2 px-5 py-3 md:px-6">
                 <div className="flex items-center gap-3">
                     <AgentIcon icon={icon} size="sm" />
                     <div className="leading-tight">
-                        <div className="font-medium">{name}</div>
+                        <div className="font-semibold">{name}</div>
                         <div className="text-sm text-mute">{t('chat.title')}</div>
                     </div>
                 </div>
                 {msgs.length > 0 && (
-                    <button onClick={() => { abort.current?.abort(); setMsgs([]); setError(false); }} className="flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-sm text-ink transition hover:bg-white/[0.06]">
+                    <button onClick={() => { abort.current?.abort(); setMsgs([]); setError(false); }} className="flex items-center gap-1.5 rounded-full border-2 border-line px-3.5 py-2 text-sm font-medium text-ink transition hover:border-edge">
                         <RotateCcw className="size-3.5" />{t('chat.reset')}
                     </button>
                 )}
@@ -102,30 +102,30 @@ export default function Chat({ slug, name, icon, starters }: { slug: string; nam
                 {msgs.length === 0 && (
                     <div className="flex h-full flex-col items-center justify-center text-center">
                         <AgentIcon icon={icon} size="xl" />
-                        <p className="mt-5 max-w-xs text-lg font-medium tracking-tight">{t('chat.empty')}</p>
+                        <p className="mt-5 max-w-xs font-display text-xl font-medium">{t('chat.empty')}</p>
                     </div>
                 )}
                 {msgs.map((m, i) =>
                     m.role === 'user' ? (
                         <div key={i} className="flex justify-end">
-                            <div className="max-w-[85%] rounded-[20px] rounded-br-md bg-[#363636] px-4 py-2.5 leading-relaxed whitespace-pre-wrap">{m.content}</div>
+                            <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-brand px-4 py-2.5 leading-relaxed whitespace-pre-wrap text-brand-ink">{m.content}</div>
                         </div>
                     ) : (
                         <div key={i} className="flex items-start gap-3">
                             <AgentIcon icon={icon} size="sm" className="!size-9" />
                             <div className="min-w-0 flex-1">
-                                <div className="mb-1 text-sm font-medium">{name}</div>
+                                <div className="mb-1 text-sm font-semibold">{name}</div>
                                 {m.content === '' ? (
                                     <span className="inline-flex items-center gap-1 py-2" aria-label="...">
-                                        <span className="size-1.5 animate-pulse rounded-full bg-mute" />
-                                        <span className="size-1.5 animate-pulse rounded-full bg-mute [animation-delay:150ms]" />
-                                        <span className="size-1.5 animate-pulse rounded-full bg-mute [animation-delay:300ms]" />
+                                        <span className="size-2 animate-pulse rounded-full bg-brand" />
+                                        <span className="size-2 animate-pulse rounded-full bg-brand [animation-delay:150ms]" />
+                                        <span className="size-2 animate-pulse rounded-full bg-brand [animation-delay:300ms]" />
                                     </span>
                                 ) : (
                                     <div className="chat-md"><Markdown>{m.content}</Markdown></div>
                                 )}
                                 {m.content && !busy && (
-                                    <button onClick={() => copy(i)} className="mt-2 flex items-center gap-1.5 rounded-full py-1 text-sm text-ink/70 transition hover:text-ink">
+                                    <button onClick={() => copy(i)} className="mt-2 flex items-center gap-1.5 rounded-full py-1 text-sm text-mute transition hover:text-ink">
                                         {copied === i ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
                                         {copied === i ? t('chat.copied') : t('chat.copy')}
                                     </button>
@@ -134,13 +134,13 @@ export default function Chat({ slug, name, icon, starters }: { slug: string; nam
                         </div>
                     ),
                 )}
-                {error && <div className="rounded-2xl border border-[#ff7a59]/50 px-4 py-3 text-sm text-[#ff9b80]">{t('chat.error')}</div>}
+                {error && <div className="rounded-2xl border-2 border-brand px-4 py-3 text-sm text-ink">{t('chat.error')}</div>}
             </div>
 
             {msgs.length === 0 && (
                 <div className="flex flex-col gap-2 px-5 pb-3 md:px-6">
                     {starters.map((s) => (
-                        <button key={s} onClick={() => send(s)} className="rounded-2xl border border-line bg-white/[0.03] px-4 py-3 text-left text-sm text-ink transition hover:border-white/30 hover:bg-white/[0.06]">
+                        <button key={s} onClick={() => send(s)} className="rounded-xl border-2 border-line bg-field px-4 py-3 text-left text-sm text-ink transition hover:border-edge">
                             {s}
                         </button>
                     ))}
@@ -148,7 +148,7 @@ export default function Chat({ slug, name, icon, starters }: { slug: string; nam
             )}
 
             <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="px-4 pb-3 md:px-5">
-                <div className="flex items-end gap-2 rounded-[22px] border border-white/15 bg-[#1f1f1f] py-2 pr-2 pl-4 focus-within:border-white/40">
+                <div className="flex items-end gap-2 rounded-2xl border-2 border-line bg-field py-2 pr-2 pl-4 focus-within:border-edge">
                     <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -160,9 +160,9 @@ export default function Chat({ slug, name, icon, starters }: { slug: string; nam
                         className="max-h-32 min-h-9 flex-1 resize-none bg-transparent py-1.5 text-[0.9375rem] outline-none placeholder:text-dim"
                     />
                     {busy ? (
-                        <button type="button" onClick={() => abort.current?.abort()} aria-label={t('chat.stop')} className="grid size-9 place-items-center rounded-full border border-white/30 transition hover:bg-white/10"><Square className="size-3.5 fill-current" /></button>
+                        <button type="button" onClick={() => abort.current?.abort()} aria-label={t('chat.stop')} className="grid size-9 place-items-center rounded-full border-2 border-edge transition hover:bg-surface2"><Square className="size-3.5 fill-current" /></button>
                     ) : (
-                        <button type="submit" disabled={!input.trim()} aria-label={t('chat.send')} className="grid size-9 place-items-center rounded-full bg-ink text-bg0 transition hover:bg-white/80 disabled:bg-[#3a3a3a] disabled:text-mute"><ArrowUp className="size-4" /></button>
+                        <button type="submit" disabled={!input.trim()} aria-label={t('chat.send')} className="grid size-9 place-items-center rounded-full bg-brand text-brand-ink transition hover:opacity-90 disabled:bg-surface2 disabled:text-dim"><ArrowUp className="size-4" /></button>
                     )}
                 </div>
                 <p className="mt-2 px-2 text-sm text-mute">{t('chat.disclaimer')}</p>

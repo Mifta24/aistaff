@@ -1,16 +1,81 @@
-import { useId } from 'react';
+import type { ReactNode } from 'react';
 
-type Spec = { shape: 'diamond' | 'square' | 'cloud' | 'circle' | 'shield' | 'capsule' | 'arch' | 'hex'; from: string; to: string; eyes: 'oval' };
+const INK = '#2a211a';
+
+type Spec = { fill: string; shape: 'diamond' | 'square' | 'cloud' | 'circle' | 'shield' | 'capsule' | 'arch' | 'tilt'; extra: (i: string) => ReactNode };
 
 const specs: Record<string, Spec> = {
-    'trending-up': { shape: 'diamond', from: '#FF9F5A', to: '#EE5F12', eyes: 'oval' },
-    calculator: { shape: 'square', from: '#74E3A4', to: '#2DAE68', eyes: 'oval' },
-    megaphone: { shape: 'cloud', from: '#BC95FF', to: '#7A4CE0', eyes: 'oval' },
-    languages: { shape: 'circle', from: '#74C8FF', to: '#2B8DE6', eyes: 'oval' },
-    'file-text': { shape: 'shield', from: '#F7E36A', to: '#D8B01A', eyes: 'oval' },
-    headset: { shape: 'capsule', from: '#FF96AE', to: '#E64C6C', eyes: 'oval' },
-    'concierge-bell': { shape: 'arch', from: '#63E4D3', to: '#1FA698', eyes: 'oval' },
-    scale: { shape: 'hex', from: '#93A6FF', to: '#5367DF', eyes: 'oval' },
+    // sales: tilted diamond + upward arrow sprout
+    'trending-up': {
+        fill: '#E8744B', shape: 'diamond',
+        extra: () => <path d="M68 22 l11 -12 l11 12 M79 10 v20" fill="none" stroke={INK} strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" />,
+    },
+    // accounting: round glasses
+    calculator: {
+        fill: '#86B88F', shape: 'square',
+        extra: () => (
+            <g fill="none" stroke={INK} strokeWidth="4.6">
+                <circle cx="35" cy="47" r="12" /><circle cx="65" cy="47" r="12" /><path d="M46 47 h8" />
+            </g>
+        ),
+    },
+    // social: little heart bubble
+    megaphone: {
+        fill: '#A98BDC', shape: 'cloud',
+        extra: () => <path d="M82 10 c0 -9 -14 -9 -14 0 c0 6 14 14 14 14 c0 0 14 -8 14 -14 c0 -9 -14 -9 -14 0z" fill="#FFC2CC" stroke={INK} strokeWidth="3.2" strokeLinejoin="round" transform="translate(-1 2)" />,
+    },
+    // translator: "A" tag
+    languages: {
+        fill: '#6FA8E0', shape: 'circle',
+        extra: () => (
+            <g>
+                <rect x="66" y="8" width="26" height="22" rx="7" fill="#FFF3D6" stroke={INK} strokeWidth="2.6" />
+                <path d="M72 25 l5 -12 l5 12 M74 21 h6" fill="none" stroke={INK} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+        ),
+    },
+    // office: pencil behind ear
+    'file-text': {
+        fill: '#F0BE45', shape: 'shield',
+        extra: () => (
+            <g stroke={INK} strokeWidth="2.6" strokeLinejoin="round">
+                <path d="M76 4 l11 11 l-19 19 l-12 1 l1 -12z" fill="#E2573A" />
+                <path d="M58 23 l9 9" />
+            </g>
+        ),
+    },
+    // support: headset
+    headset: {
+        fill: '#F09AA9', shape: 'capsule',
+        extra: () => (
+            <g fill="none" stroke={INK} strokeWidth="3.4" strokeLinecap="round">
+                <path d="M17 46 a33 33 0 0 1 66 0" strokeWidth="5" />
+                <rect x="14" y="44" width="9" height="18" rx="4.5" fill="#FFF3D6" />
+                <rect x="77" y="44" width="9" height="18" rx="4.5" fill="#FFF3D6" />
+                <path d="M81 62 q0 14 -16 14" strokeWidth="3.6" /><circle cx="63" cy="76" r="4.2" fill={INK} stroke="none" />
+            </g>
+        ),
+    },
+    // hotel: service bell on head
+    'concierge-bell': {
+        fill: '#58B7A8', shape: 'arch',
+        extra: () => (
+            <g stroke={INK} strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round">
+                <path d="M36 12 a14 14 0 0 1 28 0z" fill="#FFF3D6" transform="translate(0 6)" />
+                <path d="M50 12 v-4" fill="none" />
+                <circle cx="50" cy="7" r="2.6" fill={INK} />
+            </g>
+        ),
+    },
+    // legal: tiny scale
+    scale: {
+        fill: '#8E9CF0', shape: 'tilt',
+        extra: () => (
+            <g fill="none" stroke={INK} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M50 7 v16 M38 13 h24 M38 13 l-5 10 h10z M62 13 l-5 10 h10z" />
+            </g>
+        ),
+    },
 };
 
 const sizes = {
@@ -23,57 +88,57 @@ const sizes = {
 
 export type AgentIconSize = keyof typeof sizes;
 
-export function AgentIcon({ icon, size = 'md', className = '' }: { icon: string; size?: AgentIconSize; className?: string }) {
-    const uid = useId().replace(/:/g, '');
-    const s = specs[icon] ?? specs['trending-up'];
-    const fill = `url(#g${uid})`;
-    const eyeY = s.shape === 'cloud' ? 58 : s.shape === 'arch' ? 54 : 51;
-    const shape = {
-        diamond: <rect x="17" y="17" width="66" height="66" rx="24" transform="rotate(45 50 50)" fill={fill} />,
-        square: <rect x="7" y="7" width="86" height="86" rx="30" fill={fill} />,
-        cloud: (
-            <g fill={fill}>
-                <circle cx="29" cy="62" r="23" />
-                <circle cx="71" cy="62" r="23" />
-                <circle cx="50" cy="42" r="31" />
-                <rect x="29" y="52" width="42" height="33" />
+function body(shape: Spec['shape'], fill: string, stroke: string, sw: number) {
+    const p = { fill, stroke, strokeWidth: sw, strokeLinejoin: 'round' as const };
+    switch (shape) {
+        case 'diamond': return <rect x="19" y="19" width="62" height="62" rx="20" transform="rotate(45 50 50)" {...p} />;
+        case 'square': return <rect x="10" y="12" width="80" height="78" rx="26" {...p} />;
+        case 'cloud': return (
+            <g {...p}>
+                <circle cx="29" cy="62" r="22" /><circle cx="71" cy="62" r="22" /><circle cx="50" cy="42" r="29" /><rect x="29" y="52" width="42" height="32" stroke="none" fill={fill} />
             </g>
-        ),
-        circle: <circle cx="50" cy="50" r="45" fill={fill} />,
-        shield: <path d="M50 5 Q60 5 69 15 L88 34 Q96 43 94 54 L90 80 Q88 95 72 95 L28 95 Q12 95 10 80 L6 54 Q4 43 12 34 L31 15 Q40 5 50 5Z" fill={fill} />,
-        capsule: <rect x="17" y="4" width="66" height="92" rx="33" fill={fill} />,
-        arch: <path d="M6 80 V50 a44 44 0 0 1 88 0 V80 a15 15 0 0 1 -15 15 H21 a15 15 0 0 1 -15 -15Z" fill={fill} />,
-        hex: <polygon points="50,14 84,32 84,68 50,86 16,68 16,32" fill={fill} stroke={fill} strokeWidth="16" strokeLinejoin="round" />,
-    }[s.shape];
-    const eye = (cx: number) => (
-        <g>
-            <ellipse cx={cx} cy={eyeY} rx="9.5" ry="12.5" fill="#1d1208" opacity="0.9" />
-            <circle cx={cx + 3} cy={eyeY - 4.5} r="3.6" fill="#fff" />
-        </g>
-    );
+        );
+        case 'circle': return <circle cx="50" cy="52" r="41" {...p} />;
+        case 'shield': return <path d="M50 8 Q60 8 69 18 L87 36 Q94 44 92 55 L88 80 Q86 93 72 93 L28 93 Q14 93 12 80 L8 55 Q6 44 13 36 L31 18 Q40 8 50 8Z" {...p} />;
+        case 'capsule': return <rect x="19" y="8" width="62" height="86" rx="31" {...p} />;
+        case 'arch': return <path d="M9 82 V54 a41 41 0 0 1 82 0 V82 a12 12 0 0 1 -12 12 H21 a12 12 0 0 1 -12 -12Z" {...p} />;
+        case 'tilt': return <rect x="12" y="14" width="76" height="76" rx="24" transform="rotate(-7 50 52)" {...p} />;
+    }
+}
 
+export function AgentIcon({ icon, size = 'md', className = '' }: { icon: string; size?: AgentIconSize; className?: string }) {
+    const s = specs[icon] ?? specs['trending-up'];
+    const eyeY = s.shape === 'cloud' ? 60 : s.shape === 'capsule' ? 54 : s.shape === 'arch' ? 56 : 54;
+    const mouthY = eyeY + 13;
     return (
-        <svg viewBox="3 3 94 94" aria-hidden className={`shrink-0 drop-shadow-[0_6px_8px_rgba(0,0,0,0.35)] ${sizes[size]} ${className}`}>
-            <defs>
-                <linearGradient id={`g${uid}`} gradientUnits="userSpaceOnUse" x1="0" y1="4" x2="0" y2="96">
-                    <stop offset="0" stopColor={s.from} />
-                    <stop offset="1" stopColor={s.to} />
-                </linearGradient>
-            </defs>
-            {shape}
-            <ellipse cx="34" cy="24" rx="14" ry="6" fill="#fff" opacity="0.22" transform="rotate(-28 34 24)" />
-            {eye(35)}
-            {eye(65)}
+        <svg viewBox="0 0 106 106" aria-hidden className={`shrink-0 overflow-visible ${sizes[size]} ${className}`}>
+            <g transform="translate(5 6)" style={{ fill: 'var(--c-hard)' }}>
+                {body(s.shape, 'var(--c-hard)', 'var(--c-hard)', 3)}
+            </g>
+            <g>
+                {body(s.shape, s.fill, INK, 3)}
+                {s.extra('')}
+                <g fill={INK}>
+                    <ellipse cx="36" cy={eyeY} rx="4.4" ry="5.6" />
+                    <ellipse cx="64" cy={eyeY} rx="4.4" ry="5.6" />
+                </g>
+                <circle cx="37.6" cy={eyeY - 2} r="1.5" fill="#FFF3D6" />
+                <circle cx="65.6" cy={eyeY - 2} r="1.5" fill="#FFF3D6" />
+                <path d={`M43 ${mouthY} q7 7 14 0`} fill="none" stroke={INK} strokeWidth="3.2" strokeLinecap="round" />
+                <circle cx="27" cy={mouthY - 2} r="4" fill="#FF8F7A" opacity="0.55" />
+                <circle cx="73" cy={mouthY - 2} r="4" fill="#FF8F7A" opacity="0.55" />
+            </g>
         </svg>
     );
 }
 
-export function BrandMark({ className = 'size-7' }: { className?: string }) {
+export function BrandMark({ className = 'size-8' }: { className?: string }) {
     return (
         <svg viewBox="0 0 100 100" aria-hidden className={className}>
-            <rect width="100" height="100" rx="26" fill="#c8f542" />
-            <ellipse cx="35" cy="50" rx="8" ry="11" fill="#141414" />
-            <ellipse cx="65" cy="50" rx="8" ry="11" fill="#141414" />
+            <rect x="5" y="5" width="90" height="90" rx="26" fill="var(--c-brand)" stroke={INK} strokeWidth="5" />
+            <ellipse cx="35" cy="46" rx="6" ry="8" fill="#FFF3D6" />
+            <ellipse cx="65" cy="46" rx="6" ry="8" fill="#FFF3D6" />
+            <path d="M38 66 q12 11 24 0" fill="none" stroke="#FFF3D6" strokeWidth="6" strokeLinecap="round" />
         </svg>
     );
 }
